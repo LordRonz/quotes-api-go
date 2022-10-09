@@ -46,7 +46,10 @@ func main() {
 
 	e.GET("/", handler.HelloWorld())
 	e.GET("/quote", handler.GetQuotes(db))
+	e.GET("/random", handler.GetRandomQuotes(db))
 	e.POST("/quote", handler.CreateQuotes(db))
+	e.PATCH("/quote/:id", handler.UpdateQuotes(db))
+	e.DELETE("/quote/:id", handler.DeleteQuotes(db))
 
 	argsPort := flag.Int("port", -1, "port number")
 	flag.Parse()
