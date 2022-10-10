@@ -2,6 +2,7 @@ package handler
 
 import (
 	"backend-2/api/cmd/db/model"
+	"backend-2/api/cmd/db/plugin"
 	"crypto/rand"
 	"math/big"
 	"strconv"
@@ -23,15 +24,31 @@ func HelloWorld() echo.HandlerFunc {
 
 func GetQuotes(db *gorm.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var q []*model.Quote
+		limit, _ := strconv.Atoi(c.QueryParam("limit"))
+		page, _ := strconv.Atoi(c.QueryParam("page"))
 
-		if err := db.Find(&q).Error; err != nil {
-			// error handling here
-			return err
+		pagination := plugin.Pagination{
+			Limit: limit,
+			Page:  page,
 		}
 
-		return c.JSON(http.StatusOK, q)
+		res, err := listQuotes(db, pagination)
+
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError)
+		}
+
+		return c.JSON(http.StatusOK, res)
 	}
+}
+
+func listQuotes(db *gorm.DB, pagination plugin.Pagination) (*plugin.Pagination, error) {
+	var quotes []*model.Quote
+
+	db.Scopes(plugin.Paginate(quotes, &pagination, db)).Find(&quotes)
+	pagination.Rows = quotes
+
+	return &pagination, nil
 }
 
 func GetRandomQuotes(db *gorm.DB) echo.HandlerFunc {
