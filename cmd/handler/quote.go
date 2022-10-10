@@ -57,7 +57,7 @@ func GetRandomQuotes(db *gorm.DB) echo.HandlerFunc {
 }
 
 type QuotePost struct {
-	Quote  string `json:"quote" form:"quote" query:"quote"`
+	Quote string `json:"quote" form:"quote" query:"quote"`
 }
 
 func CreateQuotes(db *gorm.DB) echo.HandlerFunc {
@@ -67,7 +67,7 @@ func CreateQuotes(db *gorm.DB) echo.HandlerFunc {
 			return c.String(http.StatusBadRequest, "bad request")
 		}
 		quote := model.Quote{
-			Quote: q.Quote,
+			Quote:     q.Quote,
 			CreatedAt: datatypes.Date(time.Now()),
 			UpdatedAt: datatypes.Date(time.Now()),
 		}
@@ -82,7 +82,7 @@ func UpdateQuotes(db *gorm.DB) echo.HandlerFunc {
 		if id == "" {
 			return c.String(http.StatusBadRequest, "bad request")
 		}
-		parsedID, err := strconv.ParseInt(id,10,64)
+		parsedID, err := strconv.ParseInt(id, 10, 64)
 		if err != nil {
 			return c.String(http.StatusBadRequest, "bad request")
 		}
@@ -108,7 +108,7 @@ func DeleteQuotes(db *gorm.DB) echo.HandlerFunc {
 		if id == "" {
 			return c.String(http.StatusBadRequest, "bad request")
 		}
-		parsedID, err := strconv.ParseInt(id,10,64)
+		parsedID, err := strconv.ParseInt(id, 10, 64)
 		if err != nil {
 			return c.String(http.StatusBadRequest, "bad request")
 		}
