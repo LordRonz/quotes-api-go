@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"time"
 
+	"backend-2/api/cmd/config"
 	"backend-2/api/cmd/db"
 	"backend-2/api/cmd/handler"
 	"backend-2/api/cmd/utils"
@@ -47,9 +48,11 @@ func main() {
 	e.GET("/", handler.HelloWorld())
 	e.GET("/quote", handler.GetQuotes(db))
 	e.GET("/random", handler.GetRandomQuotes(db))
-	e.POST("/quote", handler.CreateQuotes(db))
-	e.PATCH("/quote/:id", handler.UpdateQuotes(db))
-	e.DELETE("/quote/:id", handler.DeleteQuotes(db))
+	e.POST("/quote", handler.CreateQuotes(db), config.GetJwtMiddleware())
+	e.PATCH("/quote/:id", handler.UpdateQuotes(db), config.GetJwtMiddleware())
+	e.DELETE("/quote/:id", handler.DeleteQuotes(db), config.GetJwtMiddleware())
+
+	e.POST("/login", handler.Login(db))
 
 	argsPort := flag.Int("port", -1, "port number")
 	flag.Parse()
