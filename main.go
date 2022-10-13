@@ -15,6 +15,7 @@ import (
 	"backend-2/api/cmd/handler"
 	"backend-2/api/cmd/utils"
 	_ "backend-2/api/docs"
+	"backend-2/api/graphql"
 
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
@@ -53,6 +54,10 @@ func main() {
 	e.DELETE("/quote/:id", handler.DeleteQuotes(db), config.GetJwtMiddleware())
 
 	e.POST("/login", handler.Login(db))
+
+	h, err := graphql.NewHandler(db)
+	logFatal(err)
+	e.POST("/graphql", echo.WrapHandler(h))
 
 	argsPort := flag.Int("port", -1, "port number")
 	flag.Parse()
