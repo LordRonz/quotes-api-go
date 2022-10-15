@@ -1,6 +1,7 @@
 package plugin
 
 import (
+	"encoding/json"
 	"math"
 
 	"gorm.io/gorm"
@@ -13,6 +14,10 @@ type Pagination struct {
 	TotalRows  int64       `json:"total_rows"`
 	TotalPages int         `json:"total_pages"`
 	Rows       interface{} `json:"rows"`
+}
+
+func (p *Pagination) MarshalBinary() ([]byte, error) {
+    return json.Marshal(p)
 }
 
 func (p *Pagination) GetOffset() int {

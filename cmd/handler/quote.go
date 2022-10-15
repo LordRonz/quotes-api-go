@@ -3,7 +3,10 @@ package handler
 import (
 	"backend-2/api/cmd/db/model"
 	"backend-2/api/cmd/db/plugin"
+	redisclient "backend-2/api/cmd/utils/redis"
 	"crypto/rand"
+	"encoding/json"
+	"fmt"
 	"math/big"
 	"strconv"
 	"time"
@@ -13,6 +16,7 @@ import (
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
 
+	"github.com/go-redis/redis/v8"
 	"github.com/labstack/echo/v4"
 )
 
@@ -32,10 +36,33 @@ func GetQuotes(db *gorm.DB) echo.HandlerFunc {
 			Page:  page,
 		}
 
-		res, err := listQuotes(db, pagination)
+		redisKey := fmt.Sprintf("QUOTES-%d-%d", limit, page)
 
-		if err != nil {
-			return echo.NewHTTPError(http.StatusInternalServerError)
+		var res *plugin.Pagination = &plugin.Pagination{}
+
+		val, err := redisclient.Rdb.Get(redisclient.Ctx, redisKey).Result()
+
+		if (err == redis.Nil) {
+			res, err = listQuotes(db, pagination)
+
+			if err != nil {
+				return echo.NewHTTPError(http.StatusInternalServerError)
+			}
+
+			if err != nil {
+				return echo.NewHTTPError(http.StatusInternalServerError)
+			}
+
+			err = redisclient.Rdb.Set(redisclient.Ctx, redisKey, res, 60*time.Second).Err()
+
+			if err != nil {
+				return echo.NewHTTPError(http.StatusInternalServerError)
+			}
+		} else {
+			err = json.Unmarshal([]byte(val), res)
+			if err != nil {
+				return echo.NewHTTPError(http.StatusInternalServerError)
+			}
 		}
 
 		return c.JSON(http.StatusOK, res)
@@ -89,6 +116,7 @@ func CreateQuotes(db *gorm.DB) echo.HandlerFunc {
 			UpdatedAt: datatypes.Date(time.Now()),
 		}
 		db.Create(&quote)
+		redisclient.DelByPattern("QUOTES*")
 		return c.JSON(http.StatusCreated, quote)
 	}
 }
@@ -115,6 +143,7 @@ func UpdateQuotes(db *gorm.DB) echo.HandlerFunc {
 		quote.Quote = q.Quote
 		quote.UpdatedAt = datatypes.Date(time.Now())
 		db.Save(quote)
+		redisclient.DelByPattern("QUOTES*")
 		return c.JSON(http.StatusOK, quote)
 	}
 }
@@ -134,7 +163,7 @@ func DeleteQuotes(db *gorm.DB) echo.HandlerFunc {
 			ID: uint(parsedID),
 		}
 		db.Delete(&quote)
-
+		redisclient.DelByPattern("QUOTES*")
 		return c.NoContent(http.StatusNoContent)
 	}
 }

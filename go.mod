@@ -8,6 +8,8 @@ require (
 )
 
 require (
+	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/graphql-go/graphql v0.8.0 // indirect
 	gorm.io/driver/mysql v1.3.2 // indirect
@@ -21,6 +23,7 @@ require (
 	github.com/go-openapi/jsonreference v0.19.6 // indirect
 	github.com/go-openapi/spec v0.20.4 // indirect
 	github.com/go-openapi/swag v0.19.15 // indirect
+	github.com/go-redis/redis/v8 v8.11.5
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/graphql-go/handler v0.2.3
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
