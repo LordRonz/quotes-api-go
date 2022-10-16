@@ -9,13 +9,16 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func GetEnv(key string, def ...string) string {
+func LoadEnv() {
 	// load .env file
 	err := godotenv.Load(".env")
 
 	if err != nil {
 		log.Fatalf("Error loading .env file")
 	}
+}
+
+func GetEnv(key string, def ...string) string {
 	env := os.Getenv(key)
 	if env != "" {
 		return env

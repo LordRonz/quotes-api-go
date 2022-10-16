@@ -17,24 +17,14 @@ import (
 	_ "backend-2/api/docs"
 	"backend-2/api/graphql"
 
-	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
-func goDotEnvVariable(key string) string {
-	// load .env file
-	err := godotenv.Load(".env")
-
-	if err != nil {
-		log.Fatalf("Error loading .env file")
-	}
-
-	return os.Getenv(key)
-}
-
 func main() {
+	utils.LoadEnv()
+
 	e := echo.New()
 	db, err := db.NewDB()
 	logFatal(err)
