@@ -7,6 +7,6 @@ func TestGetEnv(t *testing.T) {
 	want := "default"
 
 	if got != want {
-        t.Errorf("got %q, wanted %q", got, want)
-    }
+		t.Errorf("got %q, wanted %q", got, want)
+	}
 }

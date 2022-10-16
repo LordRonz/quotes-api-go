@@ -7,6 +7,6 @@ func TestConcat(t *testing.T) {
 	want := "Hello World"
 
 	if got != want {
-        t.Errorf("got %q, wanted %q", got, want)
-    }
+		t.Errorf("got %q, wanted %q", got, want)
+	}
 }

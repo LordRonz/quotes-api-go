@@ -17,7 +17,7 @@ type Pagination struct {
 }
 
 func (p *Pagination) MarshalBinary() ([]byte, error) {
-    return json.Marshal(p)
+	return json.Marshal(p)
 }
 
 func (p *Pagination) GetOffset() int {

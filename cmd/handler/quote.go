@@ -42,7 +42,7 @@ func GetQuotes(db *gorm.DB) echo.HandlerFunc {
 
 		val, err := redisclient.Rdb.Get(redisclient.Ctx, redisKey).Result()
 
-		if (err == redis.Nil) {
+		if err == redis.Nil {
 			res, err = listQuotes(db, pagination)
 
 			if err != nil {

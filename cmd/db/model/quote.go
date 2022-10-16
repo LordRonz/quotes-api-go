@@ -14,7 +14,7 @@ type Quote struct {
 }
 
 func (q Quote) MarshalBinary() ([]byte, error) {
-    return json.Marshal(q)
+	return json.Marshal(q)
 }
 
 func (Quote) TableName() string { return "quotes" }
