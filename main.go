@@ -14,14 +14,28 @@ import (
 	"backend-2/api/cmd/db"
 	"backend-2/api/cmd/handler"
 	"backend-2/api/cmd/utils"
-	_ "backend-2/api/docs"
 	"backend-2/api/graphql"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
+	_ "backend-2/api/docs"
 )
 
+// @title Quotes API Go
+// @version 1.0
+// @description This is a quotes API server.
+
+// @contact.name API Support
+// @contact.url https://lr-link.vercel.app
+// @contact.email aarontanhar2000@gmail.com
+
+// @license.name MIT
+// @license.url https://opensource.org/licenses/MIT
+
+// @host localhost:1323
+// @BasePath /
+// @schemes http
 func main() {
 	utils.LoadEnv()
 

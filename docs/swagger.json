@@ -1,7 +1,48 @@
 {
+    "schemes": [
+        "http"
+    ],
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "This is a quotes API server.",
+        "title": "Quotes API Go",
+        "contact": {
+            "name": "API Support",
+            "url": "https://lr-link.vercel.app",
+            "email": "aarontanhar2000@gmail.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+        "version": "1.0"
     },
-    "paths": {}
+    "host": "localhost:1323",
+    "basePath": "/",
+    "paths": {
+        "/": {
+            "get": {
+                "description": "get the hello world from server.",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Hello World"
+                ],
+                "summary": "Show the status of server.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

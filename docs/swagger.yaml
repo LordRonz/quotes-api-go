@@ -1,4 +1,33 @@
+basePath: /
+host: localhost:1323
 info:
-  contact: {}
-paths: {}
+  contact:
+    email: aarontanhar2000@gmail.com
+    name: API Support
+    url: https://lr-link.vercel.app
+  description: This is a quotes API server.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  title: Quotes API Go
+  version: "1.0"
+paths:
+  /:
+    get:
+      consumes:
+      - '*/*'
+      description: get the hello world from server.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show the status of server.
+      tags:
+      - Hello World
+schemes:
+- http
 swagger: "2.0"

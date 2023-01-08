@@ -20,9 +20,21 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// Hello World
+// @Summary Show the status of server.
+// @Description get the hello world from server.
+// @Tags Hello World
+// @Accept */*
+// @Produce json
+// @Success 200 {object} map[string]interface{}
+// @Router / [get]
 func HelloWorld() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
+		return c.JSON(http.StatusOK, struct {
+		Message string `json:"message"`
+	}{
+		Message: "Hello, World!",
+	})
 	}
 }
 
