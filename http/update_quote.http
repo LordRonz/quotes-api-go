@@ -1,6 +1,7 @@
-PATCH  http://localhost:1323/quote/2 HTTP/1.1
+PATCH  http://localhost:1323/quotes/7 HTTP/1.1
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaXNfYWRtaW4iOnRydWUsImV4cCI6MTY3MzE4MDY1MH0.-_joIV9NQzGXLT6IcUaQn8oFuV3RkBUt31_DsKxx9xY
 
 {
-    "quote": "Mada kono sekai wa, memeqs"
+    "author": "lls"
 }

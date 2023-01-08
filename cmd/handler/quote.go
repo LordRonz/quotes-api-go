@@ -113,7 +113,8 @@ func GetRandomQuotes(db *gorm.DB) echo.HandlerFunc {
 }
 
 type QuotePost struct {
-	Quote string `json:"quote" form:"quote" query:"quote"`
+	Quote  string `json:"quote" form:"quote" query:"quote"`
+	Author string `json:"author" form:"author" query:"author"`
 }
 
 func CreateQuotes(db *gorm.DB) echo.HandlerFunc {
@@ -124,6 +125,7 @@ func CreateQuotes(db *gorm.DB) echo.HandlerFunc {
 		}
 		quote := model.Quote{
 			Quote:     q.Quote,
+			Author:    q.Author,
 			CreatedAt: datatypes.Date(time.Now()),
 			UpdatedAt: datatypes.Date(time.Now()),
 		}
@@ -152,7 +154,12 @@ func UpdateQuotes(db *gorm.DB) echo.HandlerFunc {
 			ID: uint(parsedID),
 		}
 		db.First(&quote)
-		quote.Quote = q.Quote
+		if q.Quote != "" {
+			quote.Quote = q.Quote
+		}
+		if q.Author != "" {
+			quote.Author = q.Author
+		}
 		quote.UpdatedAt = datatypes.Date(time.Now())
 		db.Save(quote)
 		redisclient.DelByPattern("QUOTES*")

@@ -7,8 +7,9 @@ import (
 )
 
 type Quote struct {
-	ID        uint           `gorm:"primary_key" json:"id"`
-	Quote     string         `json:"quote"`
+	ID        uint           `gorm:"primaryKey" json:"id"`
+	Quote     string         `gorm:"not null" json:"quote"`
+	Author    string         `json:"author"`
 	CreatedAt datatypes.Date `json:"created_at"`
 	UpdatedAt datatypes.Date `json:"updated_at"`
 }
