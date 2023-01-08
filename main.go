@@ -12,14 +12,16 @@ import (
 
 	"backend-2/api/cmd/config"
 	"backend-2/api/cmd/db"
+	"backend-2/api/cmd/db/model"
 	"backend-2/api/cmd/handler"
 	"backend-2/api/cmd/utils"
 	"backend-2/api/graphql"
 
+	_ "backend-2/api/docs"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
-	_ "backend-2/api/docs"
 )
 
 // @title Quotes API Go
@@ -42,6 +44,8 @@ func main() {
 	e := echo.New()
 	db, err := db.NewDB()
 	logFatal(err)
+
+	db.AutoMigrate(&model.User{}, &model.Quote{})
 
 	e.Use(middleware.CORS())
 	e.Use(middleware.Logger())
