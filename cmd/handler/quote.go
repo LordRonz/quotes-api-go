@@ -31,10 +31,10 @@ import (
 func HelloWorld() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		return c.JSON(http.StatusOK, struct {
-		Message string `json:"message"`
-	}{
-		Message: "Hello, World!",
-	})
+			Message string `json:"message"`
+		}{
+			Message: "Hello, World!",
+		})
 	}
 }
 

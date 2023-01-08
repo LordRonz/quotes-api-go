@@ -1,6 +1,7 @@
 package redisclient
 
 import (
+	"backend-2/api/cmd/utils"
 	"context"
 
 	"github.com/go-redis/redis/v8"
@@ -8,9 +9,9 @@ import (
 
 func GetClient() *redis.Client {
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
+		Addr:     utils.GetEnv("REDIS_URL", "localhost:6379"),
+		Password: utils.GetEnv("REDIS_PASS", ""), // no password set
+		DB:       0,                              // use default DB
 	})
 	return rdb
 }

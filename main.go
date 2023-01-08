@@ -55,11 +55,11 @@ func main() {
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	e.GET("/", handler.HelloWorld())
-	e.GET("/quote", handler.GetQuotes(db))
+	e.GET("/quotes", handler.GetQuotes(db))
 	e.GET("/random", handler.GetRandomQuotes(db))
-	e.POST("/quote", handler.CreateQuotes(db), config.GetJwtMiddleware())
-	e.PATCH("/quote/:id", handler.UpdateQuotes(db), config.GetJwtMiddleware())
-	e.DELETE("/quote/:id", handler.DeleteQuotes(db), config.GetJwtMiddleware())
+	e.POST("/quotes", handler.CreateQuotes(db), config.GetJwtMiddleware())
+	e.PATCH("/quotes/:id", handler.UpdateQuotes(db), config.GetJwtMiddleware())
+	e.DELETE("/quotes/:id", handler.DeleteQuotes(db), config.GetJwtMiddleware())
 
 	e.POST("/login", handler.Login(db))
 
