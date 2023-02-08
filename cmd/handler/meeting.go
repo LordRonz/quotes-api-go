@@ -2,6 +2,7 @@ package handler
 
 import (
 	"backend-2/api/cmd/utils"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -18,9 +19,15 @@ type tokenResponse struct {
 	token string
 }
 
-var VIDEOSDK_API_KEY = utils.GetEnv("VIDEOSDK_API_KEY", "")
-var VIDEOSDK_SECRET_KEY = utils.GetEnv("VIDEOSDK_SECRET_KEY", "")
 var VIDEOSDK_API_ENDPOINT = "https://api.videosdk.live"
+
+func getVideoSDKAPIKey() string {
+	return utils.GetEnv("VIDEOSDK_API_KEY", "")
+}
+
+func getVideoSDKSecretKey() string {
+	return utils.GetEnv("VIDEOSDK_SECRET_KEY", "")
+}
 
 func GetToken() echo.HandlerFunc {
 	return func(c echo.Context) error {
@@ -29,13 +36,12 @@ func GetToken() echo.HandlerFunc {
 		permissions[1] = "allow_mod"
 
 		atClaims := jwt.MapClaims{}
-		atClaims["apikey"] = VIDEOSDK_API_KEY
+		atClaims["apikey"] = getVideoSDKAPIKey()
 		atClaims["permissions"] = permissions
 		atClaims["iat"] = time.Now().Unix()
 		atClaims["exp"] = time.Now().Add(time.Minute * 60).Unix()
 		at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
-		token, err := at.SignedString([]byte(VIDEOSDK_SECRET_KEY))
-
+		token, err := at.SignedString([]byte(getVideoSDKSecretKey()))
 		if err != nil {
 			fmt.Printf("%v\n", err)
 		}
@@ -64,7 +70,6 @@ func CreateMeeting() echo.HandlerFunc {
 		}
 		req.Header.Add("Authorization", m.Token)
 		req.Header.Add("Content-Type", "application/json")
-
 		res, err := client.Do(req)
 		if err != nil {
 			fmt.Println(err)
@@ -77,8 +82,9 @@ func CreateMeeting() echo.HandlerFunc {
 			fmt.Println(err)
 			return err
 		}
-
-		return c.JSON(http.StatusOK, body)
+		var result map[string]interface{}
+		json.Unmarshal(body, &result)
+		return c.JSON(http.StatusOK, result)
 	}
 }
 
@@ -113,6 +119,8 @@ func ValidateMeeting() echo.HandlerFunc {
 			fmt.Println(err)
 			return err
 		}
-		return c.JSON(http.StatusOK, body)
+		var result map[string]interface{}
+		json.Unmarshal(body, &result)
+		return c.JSON(http.StatusOK, result)
 	}
 }
