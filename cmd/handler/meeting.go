@@ -62,7 +62,7 @@ func CreateMeeting() echo.HandlerFunc {
 			fmt.Println(err)
 			return err
 		}
-		url := VIDEOSDK_API_ENDPOINT + "/api/meetings"
+		url := VIDEOSDK_API_ENDPOINT + "/v2/rooms"
 		method := "POST"
 
 		// fmt.Print("\n", strings.NewReader(s))
@@ -104,7 +104,7 @@ func ValidateMeeting() echo.HandlerFunc {
 			fmt.Println(err)
 			return err
 		}
-		url := VIDEOSDK_API_ENDPOINT + "/api/meetings/" + id
+		url := VIDEOSDK_API_ENDPOINT + "/v2/rooms/validate/" + id
 		method := "POST"
 
 		// fmt.Print("\n", strings.NewReader(s))
