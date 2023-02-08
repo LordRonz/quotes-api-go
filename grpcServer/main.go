@@ -8,8 +8,8 @@ import (
 	"log"
 	"net"
 
-	"google.golang.org/grpc"
 	pb "backend-2/api/grpcQuotes"
+	"google.golang.org/grpc"
 )
 
 var (
@@ -28,7 +28,7 @@ func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloRe
 }
 
 func (s *server) SayHelloAgain(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
-        return &pb.HelloReply{Message: "Hello again " + in.GetName()}, nil
+	return &pb.HelloReply{Message: "Hello again " + in.GetName()}, nil
 }
 
 func main() {

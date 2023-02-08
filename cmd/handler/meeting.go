@@ -2,8 +2,6 @@ package handler
 
 import (
 	"backend-2/api/cmd/utils"
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -56,18 +54,10 @@ func CreateMeeting() echo.HandlerFunc {
 		if err := c.Bind(m); err != nil {
 			return c.String(http.StatusBadRequest, "bad request")
 		}
-
-		str, err := json.Marshal(m)
-		if err != nil {
-			fmt.Println(err)
-			return err
-		}
 		url := VIDEOSDK_API_ENDPOINT + "/v2/rooms"
 		method := "POST"
-
-		// fmt.Print("\n", strings.NewReader(s))
 		client := &http.Client{}
-		req, err := http.NewRequest(method, url, bytes.NewBuffer(str))
+		req, err := http.NewRequest(method, url, nil)
 		if err != nil {
 			fmt.Println(err)
 			return err
@@ -99,17 +89,10 @@ func ValidateMeeting() echo.HandlerFunc {
 		if err := c.Bind(m); err != nil {
 			return c.String(http.StatusBadRequest, "bad request")
 		}
-		str, err := json.Marshal(m)
-		if err != nil {
-			fmt.Println(err)
-			return err
-		}
 		url := VIDEOSDK_API_ENDPOINT + "/v2/rooms/validate/" + id
-		method := "POST"
-
-		// fmt.Print("\n", strings.NewReader(s))
+		method := "GET"
 		client := &http.Client{}
-		req, err := http.NewRequest(method, url, bytes.NewBuffer(str))
+		req, err := http.NewRequest(method, url, nil)
 
 		if err != nil {
 			fmt.Println(err)
