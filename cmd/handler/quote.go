@@ -13,7 +13,6 @@ import (
 
 	"net/http"
 
-	"gorm.io/datatypes"
 	"gorm.io/gorm"
 
 	"github.com/go-redis/redis/v8"
@@ -126,8 +125,6 @@ func CreateQuotes(db *gorm.DB) echo.HandlerFunc {
 		quote := model.Quote{
 			Quote:     q.Quote,
 			Author:    q.Author,
-			CreatedAt: datatypes.Date(time.Now()),
-			UpdatedAt: datatypes.Date(time.Now()),
 		}
 		db.Create(&quote)
 		redisclient.DelByPattern("QUOTES*")
@@ -151,7 +148,9 @@ func UpdateQuotes(db *gorm.DB) echo.HandlerFunc {
 			return c.String(http.StatusBadRequest, "bad request")
 		}
 		quote := model.Quote{
-			ID: uint(parsedID),
+			BaseModel: model.BaseModel{
+				ID: uint(parsedID),
+			},
 		}
 		db.First(&quote)
 		if q.Quote != "" {
@@ -160,7 +159,6 @@ func UpdateQuotes(db *gorm.DB) echo.HandlerFunc {
 		if q.Author != "" {
 			quote.Author = q.Author
 		}
-		quote.UpdatedAt = datatypes.Date(time.Now())
 		db.Save(quote)
 		redisclient.DelByPattern("QUOTES*")
 		return c.JSON(http.StatusOK, quote)
@@ -179,7 +177,9 @@ func DeleteQuotes(db *gorm.DB) echo.HandlerFunc {
 		}
 
 		quote := model.Quote{
-			ID: uint(parsedID),
+			BaseModel: model.BaseModel{
+				ID: uint(parsedID),
+			},
 		}
 		db.Delete(&quote)
 		redisclient.DelByPattern("QUOTES*")
