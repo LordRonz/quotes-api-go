@@ -63,6 +63,10 @@ func main() {
 	e.GET("/meeting/get-token", handler.GetToken())
 	e.POST("/meeting/create", handler.CreateMeeting())
 	e.POST("/meeting/validate/:id", handler.ValidateMeeting())
+	e.GET("/notes", handler.GetNotes(db))
+	e.POST("/notes", handler.CreateNotes(db), config.GetJwtMiddleware())
+	e.PATCH("/notes/:id", handler.UpdateNotes(db), config.GetJwtMiddleware())
+	e.DELETE("/notes/:id", handler.DeleteNotes(db), config.GetJwtMiddleware())
 
 	e.POST("/login", handler.Login(db))
 

@@ -123,8 +123,8 @@ func CreateQuotes(db *gorm.DB) echo.HandlerFunc {
 			return c.String(http.StatusBadRequest, "bad request")
 		}
 		quote := model.Quote{
-			Quote:     q.Quote,
-			Author:    q.Author,
+			Quote:  q.Quote,
+			Author: q.Author,
 		}
 		db.Create(&quote)
 		redisclient.DelByPattern("QUOTES*")

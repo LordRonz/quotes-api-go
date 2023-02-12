@@ -6,7 +6,9 @@ import (
 
 type Note struct {
 	BaseModel
-	Note string `gorm:"type:text; not null"`
+	Note        string `gorm:"type:text; not null" json:"note"`
+	Title       string `gorm:"not null" json:"title"`
+	Description string `json:"description"`
 }
 
 func (n Note) MarshalBinary() ([]byte, error) {
