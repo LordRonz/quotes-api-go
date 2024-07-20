@@ -13,6 +13,11 @@ env:
   APP_NAME: ${{ secrets.DEV_APP_NAME }}
   REGISTRY_NAME: ${{ secrets.ARTIFACT_REGISTRY_NAME }}
   SERVICE_ACCOUNT_EMAIL: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
+  DB_HOST: ${{ secrets.DB_HOST }}
+  DB_NAME: ${{ secrets.DB_NAME }}
+  DB_USER: ${{ secrets.DB_USER }}
+  DB_PASS: ${{ secrets.DB_PASS }}
+  DB_PORT: ${{ secrets.DB_PORT }}
 
 jobs:
   build-and-deploy:
@@ -37,7 +42,14 @@ jobs:
 
       - name: Build and tag the docker image
         run: |-
-          docker build --build-arg NODE_ENV=dev . --tag $REGION-docker.pkg.dev/$PROJECT_ID/$REGISTRY_NAME/$APP_NAME:$GITHUB_SHA
+          docker build \
+          --build-arg PORT=8080 \
+          --build-arg DB_HOST=$DB_HOST \
+          --build-arg DB_NAME=$DB_NAME \
+          --build-arg DB_USER=$DB_USER \
+          --build-arg DB_PASS=$DB_PASS \
+          --build-arg DB_PORT=$DB_PORT \
+          . --tag $REGION-docker.pkg.dev/$PROJECT_ID/$REGISTRY_NAME/$APP_NAME:$GITHUB_SHA
 
       - name: Push the image to the Google Artifact Registry (GAR)
         run: |-
