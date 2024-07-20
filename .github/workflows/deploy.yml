@@ -18,6 +18,8 @@ env:
   DB_USER: ${{ secrets.DB_USER }}
   DB_PASS: ${{ secrets.DB_PASS }}
   DB_PORT: ${{ secrets.DB_PORT }}
+  REDIS_URL: ${{ secrets.REDIS_URL }}
+  REDIS_PASS: ${{ secrets.REDIS_PASS }}
 
 jobs:
   build-and-deploy:
@@ -49,6 +51,8 @@ jobs:
           --build-arg DB_USER=$DB_USER \
           --build-arg DB_PASS=$DB_PASS \
           --build-arg DB_PORT=$DB_PORT \
+          --build-arg REDIS_URL=$REDIS_URL \
+          --build-arg REDIS_PASS=$REDIS_PASS \
           . --tag $REGION-docker.pkg.dev/$PROJECT_ID/$REGISTRY_NAME/$APP_NAME:$GITHUB_SHA
 
       - name: Push the image to the Google Artifact Registry (GAR)
@@ -66,5 +70,6 @@ jobs:
           --image $REGION-docker.pkg.dev/$PROJECT_ID/$REGISTRY_NAME/$APP_NAME:$GITHUB_SHA \
           --platform "managed" \
           --service-account $SERVICE_ACCOUNT_EMAIL \
+          --allow-unauthenticated \
           --port 8080 \
           --quiet

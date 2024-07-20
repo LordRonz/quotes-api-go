@@ -3,16 +3,22 @@ package redisclient
 import (
 	"backend-2/api/cmd/utils"
 	"context"
+	"log"
 
 	"github.com/go-redis/redis/v8"
 )
 
-func GetClient() *redis.Client {
+func SetClient() *redis.Client {
+	redisUrl := utils.GetEnv("REDIS_URL", "localhost:6379")
+	redisPass := utils.GetEnv("REDIS_PASS", "")
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     utils.GetEnv("REDIS_URL", "localhost:6379"),
-		Password: utils.GetEnv("REDIS_PASS", ""), // no password set
+		Addr:     redisUrl,
+		Password: redisPass, // no password set
 		DB:       0,                              // use default DB
 	})
+	log.Printf("Connected to Redis at %v", redisUrl)
+
+	Rdb = rdb
 	return rdb
 }
 
@@ -34,4 +40,4 @@ func Clear() {
 
 var Ctx = context.Background()
 
-var Rdb = GetClient()
+var Rdb *redis.Client

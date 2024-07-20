@@ -60,10 +60,6 @@ func GetQuotes(db *gorm.DB) echo.HandlerFunc {
 				return echo.NewHTTPError(http.StatusInternalServerError)
 			}
 
-			if err != nil {
-				return echo.NewHTTPError(http.StatusInternalServerError)
-			}
-
 			err = redisclient.Rdb.Set(redisclient.Ctx, redisKey, res, 60*time.Second).Err()
 
 			if err != nil {

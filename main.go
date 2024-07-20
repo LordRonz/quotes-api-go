@@ -15,6 +15,7 @@ import (
 	"backend-2/api/cmd/db/model"
 	"backend-2/api/cmd/handler"
 	"backend-2/api/cmd/utils"
+	redisclient "backend-2/api/cmd/utils/redis"
 	"backend-2/api/graphql"
 
 	_ "backend-2/api/docs"
@@ -44,6 +45,8 @@ func main() {
 	e := echo.New()
 	db, err := db.NewDB()
 	logFatal(err)
+	
+	redisclient.SetClient()
 
 	db.AutoMigrate(&model.User{}, &model.Quote{})
 
