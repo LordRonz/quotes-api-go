@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"flag"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -22,6 +21,8 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
@@ -42,6 +43,11 @@ import (
 func main() {
 	utils.LoadEnv()
 
+	// UNIX Time is faster and smaller than most timestamps
+	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+	zerolog.TimestampFieldName = "t"
+	zerolog.LevelFieldName = "l"
+
 	e := echo.New()
 	db, err := db.NewDB()
 	logFatal(err)
@@ -52,7 +58,30 @@ func main() {
 
 	e.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(10)))
 	e.Use(middleware.CORS())
-	e.Use(middleware.Logger())
+	logger := zerolog.New(os.Stdout)
+	e.Use(middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
+		LogURI:       true,
+		LogStatus:    true,
+		LogRemoteIP:  true,
+		LogLatency:   true,
+		LogHost:      true,
+		LogMethod:    true,
+		LogUserAgent: true,
+		LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
+			logger.Log().
+				Timestamp().
+				Str("URI", v.URI).
+				Int("Status", v.Status).
+				Str("IP", v.RemoteIP).
+				Str("Host", v.Host).
+				Str("Method", v.Method).
+				Str("UserAgent", v.UserAgent).
+				Str("Latency", v.Latency.String()).
+				Msg("")
+
+			return nil
+		},
+	}))
 	e.Use(middleware.Recover())
 	e.Use(middleware.Secure())
 
@@ -110,6 +139,8 @@ func main() {
 
 func logFatal(err error) {
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatal().
+			Err(err).
+			Msgf("")
 	}
 }

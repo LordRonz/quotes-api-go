@@ -3,7 +3,8 @@ package redisclient
 import (
 	"backend-2/api/cmd/utils"
 	"context"
-	"log"
+
+	"github.com/rs/zerolog/log"
 
 	"github.com/go-redis/redis/v8"
 )

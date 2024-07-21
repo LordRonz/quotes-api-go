@@ -1,8 +1,9 @@
 package utils
 
 import (
-	"log"
 	"os"
+
+	"github.com/rs/zerolog/log"
 
 	_ "backend-2/api/docs"
 

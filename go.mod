@@ -5,10 +5,11 @@ go 1.21
 toolchain go1.22.4
 
 require (
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/graphql-go/graphql v0.8.1
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.12.0
+	github.com/rs/zerolog v1.33.0
 	google.golang.org/grpc v1.52.0
 	google.golang.org/protobuf v1.28.1
 )
