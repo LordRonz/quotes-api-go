@@ -14,7 +14,7 @@ func SetClient() *redis.Client {
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     redisUrl,
 		Password: redisPass, // no password set
-		DB:       0,                              // use default DB
+		DB:       0,         // use default DB
 	})
 	log.Printf("Connected to Redis at %v", redisUrl)
 

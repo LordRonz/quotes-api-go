@@ -71,5 +71,8 @@ jobs:
           --platform "managed" \
           --service-account $SERVICE_ACCOUNT_EMAIL \
           --allow-unauthenticated \
+          --max-instances=2 \
+          --memory=256Mi \
+          --concurrency=500 \
           --port 8080 \
           --quiet

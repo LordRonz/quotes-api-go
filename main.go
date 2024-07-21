@@ -45,11 +45,12 @@ func main() {
 	e := echo.New()
 	db, err := db.NewDB()
 	logFatal(err)
-	
+
 	redisclient.SetClient()
 
 	db.AutoMigrate(&model.User{}, &model.Quote{})
 
+	e.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(10)))
 	e.Use(middleware.CORS())
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())

@@ -82,9 +82,9 @@ func CreateNotes(db *gorm.DB) echo.HandlerFunc {
 			return c.String(http.StatusBadRequest, "bad request")
 		}
 		note := model.Note{
-			Title: n.Title,
+			Title:       n.Title,
 			Description: n.Description,
-			Note: n.Note,
+			Note:        n.Note,
 		}
 		db.Create(&note)
 		redisclient.DelByPattern("NOTES*")
