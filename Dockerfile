@@ -1,4 +1,4 @@
-FROM golang:alpine
+FROM golang:alpine AS build
 
 ARG PORT=8080
 ARG DB_HOST
@@ -29,6 +29,12 @@ COPY . ./
 
 RUN go build -o /backend
 
-EXPOSE 8080
 
+FROM alpine:latest AS run
+
+# Copy the application executable from the build image
+COPY --from=build /myapp /myapp
+
+WORKDIR /app
+EXPOSE 8080
 CMD [ "/backend" ]
