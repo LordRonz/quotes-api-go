@@ -33,7 +33,7 @@ RUN go build -o /backend
 FROM alpine:latest AS run
 
 # Copy the application executable from the build image
-COPY --from=build /myapp /myapp
+COPY --from=build /backend /backend
 
 WORKDIR /app
 EXPOSE 8080
