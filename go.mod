@@ -11,7 +11,7 @@ require (
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/rs/zerolog v1.33.0
 	google.golang.org/grpc v1.52.0
-	google.golang.org/protobuf v1.28.1
+	google.golang.org/protobuf v1.33.0
 )
 
 require (
