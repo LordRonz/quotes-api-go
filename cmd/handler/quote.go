@@ -17,6 +17,7 @@ import (
 
 	"github.com/go-redis/redis/v8"
 	"github.com/labstack/echo/v4"
+	"github.com/rs/zerolog/log"
 )
 
 // Hello World
@@ -53,21 +54,24 @@ func GetQuotes(db *gorm.DB) echo.HandlerFunc {
 
 		val, err := redisclient.Rdb.Get(redisclient.Ctx, redisKey).Result()
 
-		if err == redis.Nil {
+		if err == redis.Nil || val == "" {
 			res, err = listQuotes(db, pagination)
 
 			if err != nil {
+				log.Err(err).Msg("listQuotes error")
 				return echo.NewHTTPError(http.StatusInternalServerError)
 			}
 
 			err = redisclient.Rdb.Set(redisclient.Ctx, redisKey, res, 60*time.Second).Err()
 
 			if err != nil {
+				log.Err(err).Msg("Redis SET error")
 				return echo.NewHTTPError(http.StatusInternalServerError)
 			}
 		} else {
 			err = json.Unmarshal([]byte(val), res)
 			if err != nil {
+				log.Err(err).Msg("Unmarshal Error")
 				return echo.NewHTTPError(http.StatusInternalServerError)
 			}
 		}
