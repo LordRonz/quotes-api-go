@@ -1,9 +1,9 @@
 name: Build and Deploy to Google Cloud
 
 on:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
   workflow_dispatch:
 
 # SERVICE ACCOUNT : cloud-run-and-deploy@semiotic-karma-397201.iam.gserviceaccount.com

@@ -6,8 +6,9 @@ import (
 
 type Quote struct {
 	BaseModel
-	Quote  string `gorm:"not null" json:"quote"`
-	Author string `json:"author"`
+	Quote  string   `gorm:"not null" json:"quote"`
+	Author string   `json:"author"`
+	Tags   []string `gorm:"type:text[]"`
 }
 
 func (q Quote) MarshalBinary() ([]byte, error) {

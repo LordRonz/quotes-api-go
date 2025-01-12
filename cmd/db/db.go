@@ -14,8 +14,9 @@ func NewDB() (*gorm.DB, error) {
 	pass := utils.GetEnv("DB_PASS", "urmomgae69420")
 	name := utils.GetEnv("DB_NAME", "backend")
 	port := utils.GetEnv("DB_PORT", "5432")
+	sslmode := utils.GetEnv("DB_SSLMODE", "require")
 
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Jakarta", host, user, pass, name, port)
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=Asia/Jakarta", host, user, pass, name, port, sslmode)
 
 	return gorm.Open(postgres.New(postgres.Config{
 		DSN:                  dsn,
