@@ -2,7 +2,9 @@ package plugin
 
 import (
 	"encoding/json"
+	"fmt"
 	"math"
+	"math/rand"
 
 	"gorm.io/gorm"
 )
@@ -43,6 +45,25 @@ func (p *Pagination) GetSort() string {
 		p.Sort = "Id desc"
 	}
 	return p.Sort
+}
+
+func (p *Pagination) GetRandom() (interface{}, error) {
+	// Ensure Rows is a slice
+	rows, ok := p.Rows.([]interface{})
+	if !ok {
+		return nil, fmt.Errorf("Rows is not a slice of interface{}")
+	}
+
+	// If there are no rows, return nil
+	if len(rows) == 0 {
+		return nil, fmt.Errorf("no rows available")
+	}
+
+	// Get a random index
+	randomIndex := rand.Intn(len(rows))
+
+	// Return the random row
+	return rows[randomIndex], nil
 }
 
 func Paginate(value interface{}, pagination *Pagination, db *gorm.DB) func(db *gorm.DB) *gorm.DB {

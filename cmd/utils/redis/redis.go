@@ -17,16 +17,23 @@ func SetClient() *redis.Client {
 		redisUrl += ":6379"
 	}
 	redisPass := utils.GetEnv("REDIS_PASS", "")
-	rdb := redis.NewClient(&redis.Options{
-		Addr:      redisUrl,
-		Password:  redisPass, // no password set
-		DB:        0,         // use default DB
-		TLSConfig: &tls.Config{InsecureSkipVerify: true},
-	})
+	if strings.Split(redisUrl, ":")[0] == "localhost" {
+		Rdb = redis.NewClient(&redis.Options{
+			Addr:     redisUrl,
+			Password: redisPass, // no password set
+			DB:       0,         // use default DB
+		})
+	} else {
+		Rdb = redis.NewClient(&redis.Options{
+			Addr:      redisUrl,
+			Password:  redisPass, // no password set
+			DB:        0,         // use default DB
+			TLSConfig: &tls.Config{InsecureSkipVerify: true},
+		})
+	}
 	log.Printf("Connected to Redis at %v", redisUrl)
 
-	Rdb = rdb
-	return rdb
+	return Rdb
 }
 
 func DelByPattern(pattern string) {
