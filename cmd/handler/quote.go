@@ -210,7 +210,11 @@ func getRandomQuoteFromCache(redisKey string) (*model.Quote, error) {
 
 func getRandomQuoteFromDB(db *gorm.DB, tag string) (*model.Quote, error) {
 	var count int64
-	if err := db.Table("quotes").Count(&count).Error; err != nil {
+	table := db.Table("quotes")
+	if tag != "" {
+		table = table.Where("? = ANY(tags)", tag)
+	}
+	if err := table.Count(&count).Error; err != nil {
 		return nil, err
 	}
 
