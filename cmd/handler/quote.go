@@ -9,7 +9,8 @@ import (
 	"fmt"
 	"math/big"
 	"strconv"
-	"time"
+
+	// "time"
 
 	"net/http"
 
@@ -42,7 +43,8 @@ func GetQuotes(db *gorm.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		limit, _ := strconv.Atoi(c.QueryParam("limit"))
 		page, _ := strconv.Atoi(c.QueryParam("page"))
-
+		tag := c.QueryParam("tags")
+		log.Info()
 		pagination := plugin.Pagination{
 			Limit: limit,
 			Page:  page,
@@ -55,14 +57,14 @@ func GetQuotes(db *gorm.DB) echo.HandlerFunc {
 		val, err := redisclient.Rdb.Get(redisclient.Ctx, redisKey).Result()
 
 		if err == redis.Nil || val == "" {
-			res, err = listQuotes(db, pagination)
+			res, err = listQuotes(db, pagination, tag)
 
 			if err != nil {
 				log.Err(err).Msg("listQuotes error")
 				return echo.NewHTTPError(http.StatusInternalServerError)
 			}
 
-			err = redisclient.Rdb.Set(redisclient.Ctx, redisKey, res, 60*time.Second).Err()
+			// err = redisclient.Rdb.Set(redisclient.Ctx, redisKey, res, 60*time.Second).Err()
 
 			if err != nil {
 				log.Err(err).Msg("Redis SET error")
@@ -80,10 +82,13 @@ func GetQuotes(db *gorm.DB) echo.HandlerFunc {
 	}
 }
 
-func listQuotes(db *gorm.DB, pagination plugin.Pagination) (*plugin.Pagination, error) {
+func listQuotes(db *gorm.DB, pagination plugin.Pagination, tag string) (*plugin.Pagination, error) {
 	var quotes []*model.Quote
-
-	db.Scopes(plugin.Paginate(quotes, &pagination, db)).Find(&quotes)
+	if tag != "" {
+		db.Scopes(plugin.Paginate(quotes, &pagination, db)).Where("? = ANY(tags)", tag).Find(&quotes)
+	} else {
+		db.Scopes(plugin.Paginate(quotes, &pagination, db)).Find(&quotes)
+	}
 	pagination.Rows = quotes
 
 	return &pagination, nil
