@@ -10,7 +10,7 @@ import (
 	"math/big"
 	"strconv"
 
-	// "time"
+	"time"
 
 	"net/http"
 
@@ -44,13 +44,13 @@ func GetQuotes(db *gorm.DB) echo.HandlerFunc {
 		limit, _ := strconv.Atoi(c.QueryParam("limit"))
 		page, _ := strconv.Atoi(c.QueryParam("page"))
 		tag := c.QueryParam("tags")
-		log.Info()
+
 		pagination := plugin.Pagination{
 			Limit: limit,
 			Page:  page,
 		}
 
-		redisKey := fmt.Sprintf("QUOTES-%d-%d", limit, page)
+		redisKey := fmt.Sprintf("QUOTES-%d-%d-%d", limit, page, tag)
 
 		var res *plugin.Pagination = &plugin.Pagination{}
 
@@ -64,7 +64,7 @@ func GetQuotes(db *gorm.DB) echo.HandlerFunc {
 				return echo.NewHTTPError(http.StatusInternalServerError)
 			}
 
-			// err = redisclient.Rdb.Set(redisclient.Ctx, redisKey, res, 60*time.Second).Err()
+			err = redisclient.Rdb.Set(redisclient.Ctx, redisKey, res, 60*time.Second).Err()
 
 			if err != nil {
 				log.Err(err).Msg("Redis SET error")
